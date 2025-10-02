@@ -1,0 +1,72 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  lint-and-build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: shunt_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      POSTGRES_PRISMA_URL: postgres://postgres:postgres@localhost:5432/shunt_test
+      POSTGRES_URL_NON_POOLING: postgres://postgres:postgres@localhost:5432/shunt_test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup
+        uses: ./.github/actions/setup-node
+      - name: Lint
+        run: pnpm lint
+      - name: Generate Prisma Client
+        run: pnpm prisma generate
+      - name: Typecheck
+        run: pnpm tsc --noEmit
+      - name: Build
+        run: pnpm build
+      # - name: Debug Storybook CLI availability
+      #   run: |
+      #     pnpm exec which storybook
+      #     pnpm exec storybook --version
+      # - name: Build Storybook
+      #   run: pnpm exec storybook build
+  unit-tests:
+    runs-on: ubuntu-latest
+    needs: lint-and-build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup
+        uses: ./.github/actions/setup-node
+      - name: Run unit tests with Coverage
+        run: pnpm test:unit:coverage
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: themattharris/shunt
+  # e2e-tests:
+  #   runs-on: ubuntu-latest
+  #   needs: lint-and-build
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #     - name: Setup
+  #       uses: ./.github/actions/setup-node
+  #     - name: Install Playwright Browsers
+  #       run: pnpm exec playwright install --with-deps
+  #     - name: Run E2E Tests
+  #       run: pnpm test:e2e

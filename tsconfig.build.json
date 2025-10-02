@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": ["src", "prisma"],
+  "exclude": [
+    "node_modules",
+    ".next",
+    ".vercel",
+    "dist",
+    "coverage",
+    "tests",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ]
+}

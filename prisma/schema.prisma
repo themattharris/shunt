@@ -1,0 +1,86 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Url {
+  id        Int       @id @default(autoincrement())
+  slug      String    @unique
+  target    String
+  enabled   Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Optional scheduling
+  startAt   DateTime?
+  endAt     DateTime?
+
+  // Relations
+  domainId  Int?
+  domain    Domain?   @relation(fields: [domainId], references: [id], onDelete: SetNull)
+  visits    Visit[]
+
+  @@index([domainId])
+  @@index([enabled, domainId])
+}
+
+model Visit {
+  id        Int      @id @default(autoincrement())
+  visitedAt DateTime @default(now())
+
+  // Request metadata
+  referrer  String?
+  userAgent String?
+  ip        String?
+
+  // Geolocation data
+  country   String?
+  city      String?
+  region    String?
+  latitude  Float?
+  longitude Float?
+  timezone  String?
+  metro     Int?
+  area      Int?
+
+  // Relations
+  urlId     Int
+  url       Url      @relation(fields: [urlId], references: [id], onDelete: Cascade)
+  domainId  Int?
+  domain    Domain?  @relation(fields: [domainId], references: [id], onDelete: SetNull)
+
+  // Indexes for analytics queries
+  @@index([urlId, visitedAt])
+  @@index([domainId, visitedAt])
+  @@index([visitedAt])
+  @@index([country])
+}
+
+model Domain {
+  id          Int       @id @default(autoincrement())
+  host        String    @unique
+  title       String
+  description String
+  enabled     Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  // Admin authentication (password should be hashed via bcrypt)
+  adminPasswordHash String
+
+  // UI settings
+  showInput     Boolean @default(true)
+  showTopSlugs  Boolean @default(true)
+
+  // Relations
+  urls    Url[]
+  visits  Visit[]
+
+  @@index([enabled])
+  @@index([host])
+}

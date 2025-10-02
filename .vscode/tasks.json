@@ -1,0 +1,101 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Format with Prettier",
+      "type": "shell",
+      "command": "npx prettier \"{src,prisma,.vscode}/**/*.{ts,mjs,yaml,yml,json}\" \"*.{ts,mjs,yaml,yml,json}\" --write",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "detail": "Formats code in src/, prisma/, and top-level config files using Prettier"
+    },
+    {
+      "label": "Lint Check",
+      "type": "shell",
+      "command": "npx eslint \"src/**/*.{ts,tsx,js,jsx}\" \"prisma/**/*.ts\" --max-warnings=0",
+      "group": "build",
+      "problemMatcher": ["$eslint-stylish"],
+      "detail": "Run ESLint on src/ and prisma/ with no warnings allowed"
+    },
+    {
+      "label": "Type Check",
+      "type": "shell",
+      "command": "npx tsc --noEmit --project tsconfig.build.json",
+      "group": "build",
+      "problemMatcher": ["$tsc"],
+      "detail": "Run TypeScript compiler to check for type errors using build config"
+    },
+    {
+      "label": "Format + Lint + Type Check",
+      "dependsOn": ["Format with Prettier", "Lint Check", "Type Check"],
+      "group": "build"
+    },
+    {
+      "label": "Build (if changed) & Start Docker & Debug",
+      "type": "shell",
+      "command": "docker compose up --build -d",
+      "problemMatcher": [],
+      "isBackground": true,
+      "runOptions": {
+        "instanceLimit": 1 // default is 1 if unspecified
+      }
+    },
+    {
+      "label": "Prune Docker, Build (if changed), Start & Debug",
+      "type": "shell",
+      "command": "docker compose up --build -d && docker system prune -af",
+      "problemMatcher": [],
+      "isBackground": true,
+      "runOptions": {
+        "instanceLimit": 1 // default is 1 if unspecified
+      }
+    },
+    {
+      "label": "Prettier all ts/tsx/js/jsx files",
+      "type": "shell",
+      "command": "npx prettier --write \"**/*.ts*\" \"**/*.js*\"",
+      "problemMatcher": [],
+      "isBackground": true,
+      "runOptions": {
+        "instanceLimit": 1 // default is 1 if unspecified
+      }
+    },
+    {
+      "label": "Update dependencies in Docker Next",
+      "type": "shell",
+      "command": "docker compose exec app pnpm install && docker compose restart app",
+      "problemMatcher": []
+    },
+    {
+      "label": "Prisma generate dev database migrations",
+      "type": "shell",
+      "command": "docker",
+      "problemMatcher": [],
+      "args": ["compose", "exec", "app", "pnpm", "run", "db:generate"]
+    },
+    {
+      "label": "Prisma seed the dev database",
+      "type": "shell",
+      "command": "docker",
+      "problemMatcher": [],
+      "args": ["compose", "exec", "app", "pnpm", "run", "db:seed"]
+    },
+    {
+      "label": "Generate Prisma client",
+      "type": "shell",
+      "command": "docker",
+      "problemMatcher": [],
+      "args": ["compose", "exec", "app", "pnpm", "run", "postinstall"]
+    },
+    {
+      "label": "Reset Database",
+      "type": "shell",
+      "command": "docker",
+      "problemMatcher": [],
+      "args": ["compose", "exec", "app", "pnpm", "run", "db:reset"]
+    }
+  ]
+}

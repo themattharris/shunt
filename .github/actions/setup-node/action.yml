@@ -1,0 +1,16 @@
+name: Setup Node with pnpm
+description: Reusable step to setup Node and install dependencies with pnpm
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+
+    - name: Enable corepack and install dependencies
+      shell: bash
+      run: |
+        corepack enable
+        corepack prepare pnpm@latest --activate
+        pnpm install --frozen-lockfile

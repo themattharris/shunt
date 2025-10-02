@@ -1,0 +1,43 @@
+# codecov.yml
+
+coverage:
+  status:
+    project:
+      default:
+        # Require 80% overall project coverage
+        target: 80%
+        threshold: 1% # Allow small drops without failing
+        flags:
+          - unittests
+    patch:
+      default:
+        # Require that new changes (patches) are at least 90% covered
+        target: 90%
+        threshold: 1%
+
+comment:
+  layout: 'reach, diff, flags, files'
+  behavior: default
+  require_changes: true # only comment if there's a coverage change
+  after_n_builds: 1
+
+flags:
+  unittests:
+    paths:
+      - src/
+    carryforward: true
+
+ignore:
+  - '**/*.d.ts'
+  - '**/tests/e2e/**'
+  - '**/__tests__/fixtures/**'
+  - '**/node_modules/**'
+  - 'coverage/**'
+  - 'dist/**'
+
+parsers:
+  javascript:
+    enable_partials: true
+
+github_checks:
+  annotations: true
