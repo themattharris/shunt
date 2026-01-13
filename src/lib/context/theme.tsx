@@ -22,8 +22,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const applyTheme = useCallback((newTheme: Theme) => {
     const root = document.documentElement;
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const applied = newTheme === 'system' ? (prefersDark ? 'dark' : 'light') : newTheme;
+    const prefersDark = window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    ).matches;
+    const applied =
+      newTheme === 'system' ? (prefersDark ? 'dark' : 'light') : newTheme;
 
     root.setAttribute('data-theme', applied);
     root.classList.remove('light', 'dark');
@@ -45,7 +48,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
     const onSystemChange = () => {
-      const storedTheme = (localStorage.getItem('theme') as Theme | null) || 'system';
+      const storedTheme =
+        (localStorage.getItem('theme') as Theme | null) || 'system';
       if (storedTheme === 'system') applyTheme('system');
     };
 

@@ -15,7 +15,7 @@ async function main() {
         description: 'A URL shortener',
         admin_password: await bcrypt.hash('shunt', 10),
       },
-    })
+    }),
   ]);
 
   const metricsUrl = await prisma.url.create({

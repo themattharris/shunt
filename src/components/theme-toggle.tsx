@@ -9,7 +9,7 @@ export function ThemeToggle() {
 
   const positionMap = {
     dark: 'left-[0.25rem]',
-    system: 'left-[3.25rem]',    // centered
+    system: 'left-[3.25rem]', // centered
     light: 'left-[6.25rem]',
   };
 

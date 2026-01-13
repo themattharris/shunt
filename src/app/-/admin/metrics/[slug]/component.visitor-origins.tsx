@@ -109,7 +109,11 @@ export default function VisitorOrigins({
                 (geoData[country][region][city] || 0) + 1;
             });
 
-            let view: Record<string, number> | Record<string, Record<string, number>> | Record<string, Record<string, Record<string, number>>> = geoData;
+            let view:
+              | Record<string, number>
+              | Record<string, Record<string, number>>
+              | Record<string, Record<string, Record<string, number>>> =
+              geoData;
             if (selectedCountry) {
               view = geoData[selectedCountry];
               if (selectedRegion && typeof view === 'object') {

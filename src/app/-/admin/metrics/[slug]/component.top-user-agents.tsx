@@ -61,7 +61,7 @@ export default function TopUserAgents({
   return (
     <Card className={cn('w-full', className)}>
       <CardHeader className="flex flex-row items-center justify-between">
-      <CardTitle className="text-lg font-semibold">Top User Agents</CardTitle>
+        <CardTitle className="text-lg font-semibold">Top User Agents</CardTitle>
         <div className="flex items-center gap-2">
           <Select value={selectedRange} onValueChange={setSelectedRange}>
             <SelectTrigger className="w-[180px]">
@@ -85,22 +85,24 @@ export default function TopUserAgents({
                 const parsed = new UAParser(ua).getResult();
                 const key =
                   chartType === 'type'
-                    ? parsed.device.type ?? 'desktop'
+                    ? (parsed.device.type ?? 'desktop')
                     : chartType === 'os'
-                    ? parsed.os.name ?? 'Unknown OS'
-                    : parsed.browser.name ?? 'Unknown Browser';
+                      ? (parsed.os.name ?? 'Unknown OS')
+                      : (parsed.browser.name ?? 'Unknown Browser');
                 acc[key] = (acc[key] || 0) + count;
                 return acc;
               },
               {}
             );
-            const donutTotal = Object.values(donutGrouped).reduce((a, b) => a + b, 0);
+            const donutTotal = Object.values(donutGrouped).reduce(
+              (a, b) => a + b,
+              0
+            );
             const donutEntries = Object.entries(donutGrouped)
               .sort((a, b) => b[1] - a[1])
               .slice(0, 5);
             const otherCount =
-              donutTotal -
-              donutEntries.reduce((sum, [, val]) => sum + val, 0);
+              donutTotal - donutEntries.reduce((sum, [, val]) => sum + val, 0);
             if (otherCount > 0) {
               donutEntries.push(['Other', otherCount]);
             }
@@ -114,7 +116,10 @@ export default function TopUserAgents({
             ];
 
             return (
-              <div key={chartType} className="flex flex-row items-start gap-4 w-full justify-center">
+              <div
+                key={chartType}
+                className="flex flex-row items-start gap-4 w-full justify-center"
+              >
                 <svg
                   width="100"
                   height="100"

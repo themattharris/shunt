@@ -1,11 +1,6 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  experimental: {
-    turbo: {
-      // No need to set minify manually, Turbopack handles this automatically
-    },
-  },
   reactStrictMode: true,
   compiler: {
     removeConsole:
@@ -14,8 +9,7 @@ const nextConfig: NextConfig = {
         : false,
   },
   images: {
-    remotePatterns: [
-    ],
+    remotePatterns: [],
   },
 };
 export default nextConfig;

@@ -79,10 +79,14 @@ export default async function RootLayout({
             <footer className="container border-t-2 w-full mx-auto px-0 sm:px-4 py-4 flex justify-end items-end">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted">
-                  an ion spark by ion Consulting LLC © {new Date().getFullYear()}
+                  an ion spark by ion Consulting LLC ©{' '}
+                  {new Date().getFullYear()}
                 </span>
                 <span className="text-muted">|</span>
-                <Link href="/-/privacy" className="text-sm text-muted hover:text-foreground">
+                <Link
+                  href="/-/privacy"
+                  className="text-sm text-muted hover:text-foreground"
+                >
                   Privacy Policy
                 </Link>
               </div>

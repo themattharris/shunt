@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 
 export default async function Home() {
   const domain = await getDomain();
-  const since_date = new Date(Date.now() - 24 * 60 * 60 * 1000)
+  const since_date = new Date(Date.now() - 24 * 60 * 60 * 1000);
   const topUrlsList = await topUrls(10, since_date);
 
   return (
