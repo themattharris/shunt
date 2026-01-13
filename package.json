@@ -14,7 +14,8 @@
     "test:codecov": "vitest run --coverage",
     "predeploy": "pnpm prettier && pnpm build && pnpm eslint && pnpm typecheck && pnpm test:codecov",
     "postinstall": "prisma generate",
-    "package:bump": "ncu -t minor -u && pnpm install"
+    "package:bump": "ncu -t minor -u && pnpm install",
+    "prisma:migrate:prod": "dotenv -e .vercel/.env.production.local -- prisma migrate deploy"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -72,6 +73,7 @@
     "@types/user-agents": "^1.0.4",
     "@vitest/coverage-v8": "^3.2.4",
     "@vitest/ui": "^3.2.4",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.9",
     "husky": "^9.1.7",
