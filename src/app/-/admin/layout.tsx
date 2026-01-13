@@ -20,10 +20,10 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-async function checkAuth(admin_password: string) {
+async function checkAuth(adminPasswordHash: string) {
   const cookieStore = cookies();
   const token = (await cookieStore).get('admin_token')?.value;
-  const password_match = await bcrypt.compare(token || '', admin_password);
+  const password_match = await bcrypt.compare(token || '', adminPasswordHash);
   if (!password_match) {
     redirect('/-/login');
   }
@@ -41,7 +41,7 @@ export default async function AdminLayout({
     },
   });
   if (!domain) return <div>Domain not found</div>;
-  await checkAuth(domain.admin_password);
+  await checkAuth(domain.adminPasswordHash);
 
   return (
     <>

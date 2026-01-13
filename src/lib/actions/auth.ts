@@ -20,7 +20,10 @@ export async function login(_: unknown, formData: FormData) {
   if (!password) {
     return { error: 'Password is required' };
   }
-  const password_match = await bcrypt.compare(password, domain.admin_password);
+  const password_match = await bcrypt.compare(
+    password,
+    domain.adminPasswordHash
+  );
   if (!password_match) {
     return { error: 'Invalid password' };
   }

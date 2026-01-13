@@ -30,13 +30,13 @@ export default async function AdminPage({
 
   const [urls, total] = await Promise.all([
     db.url.findMany({
-      where: { domain: domain.host },
+      where: { domainId: domain.id },
       include: { _count: { select: { visits: true } } },
       skip,
       take,
       orderBy: { startAt: 'desc' },
     }) as Promise<(Url & { _count: { visits: number } })[]>,
-    db.url.count({ where: { domain: domain.host } }),
+    db.url.count({ where: { domainId: domain.id } }),
   ]);
 
   const totalPages = Math.ceil(total / take);

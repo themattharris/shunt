@@ -11,29 +11,30 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing slug' }, { status: 400 });
     }
 
+    const domainRecord = await db.domain.findFirst({
+      where: { host: domain },
+    });
+    if (!domainRecord) {
+      throw new Error('Domain not found');
+    }
+
     const targetUrl = await db.url.findFirst({
       where: {
         slug,
-        domain: {
-          equals: domain,
-        },
+        domainId: domainRecord.id,
       },
     });
-    if (!domain) {
-      throw new Error('Domain not found');
-    }
     if (!targetUrl) {
       throw new Error('URL not found');
     }
 
     await db.visit.create({
       data: {
-        domain,
-        slug,
         referrer,
         userAgent,
         ip,
-        urlId: targetUrl.id,
+        url: { connect: { id: targetUrl.id } },
+        domain: { connect: { id: domainRecord.id } },
       },
     });
 

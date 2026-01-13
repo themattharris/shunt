@@ -14,12 +14,12 @@ export default async function Home() {
   return (
     <div className="w-full max-w-screen-md px-4 mx-auto">
       <SiteLogo />
-      {domain?.show_input && (
+      {domain?.showInput && (
         <div className="flex flex-col items-center justify-center w-full mt-8 mb-8">
           <SlugRedirect />
         </div>
       )}
-      {domain?.show_top_slugs && topUrlsList.length > 0 && (
+      {domain?.showTopSlugs && topUrlsList.length > 0 && (
         <div className="flex flex-col items-center justify-center w-full h-full mt-16">
           <h2 className="text-xl font-bold mb-4">Most Visited Today</h2>
           <ul className="flex flex-wrap gap-2 justify-center">

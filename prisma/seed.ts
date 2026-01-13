@@ -13,7 +13,7 @@ async function main() {
         host: 'shunt.to',
         title: 'Shunt',
         description: 'A URL shortener',
-        admin_password: await bcrypt.hash('shunt', 10),
+        adminPasswordHash: await bcrypt.hash('shunt', 10),
       },
     }),
   ]);
@@ -22,7 +22,7 @@ async function main() {
     data: {
       slug: 'metrics',
       target: 'https://shunt.to/metrics',
-      domain: domains[0].host,
+      domain: { connect: { id: domains[0].id } },
       enabled: true,
       startAt: new Date(),
       endAt: null,
@@ -49,13 +49,12 @@ async function main() {
       }).toString();
       return prisma.visit.create({
         data: {
-          slug: 'metrics',
           visitedAt: i < 75 ? today : faker.date.recent({ days: 90 }),
           referrer: faker.helpers.arrayElement(referrerPool),
           userAgent: userAgent,
           ip: faker.internet.ipv4({}),
-          domain: domains[0].host,
-          urlId: metricsUrl.id,
+          domain: { connect: { id: domains[0].id } },
+          url: { connect: { id: metricsUrl.id } },
         },
       });
     })
@@ -80,7 +79,7 @@ async function main() {
       data: {
         slug,
         target,
-        domain: domains[0].host,
+        domain: { connect: { id: domains[0].id } },
         enabled: i % 5 !== 0, // 1 in 5 are disabled
         startAt: yesterday,
         endAt: null,
@@ -102,7 +101,6 @@ async function main() {
 
         return prisma.visit.create({
           data: {
-            slug,
             visitedAt: faker.date.between({ from: yesterday, to: today }),
             referrer: faker.helpers.arrayElement(referrerPool),
             userAgent: isMobile
@@ -112,8 +110,8 @@ async function main() {
                 ])
               : faker.internet.userAgent(),
             ip: faker.internet.ipv4({}),
-            domain: domains[0].host,
-            urlId: url.id,
+            domain: { connect: { id: domains[0].id } },
+            url: { connect: { id: url.id } },
           },
         });
       })

@@ -29,7 +29,12 @@ export async function addUrl(formData: FormData) {
 
   try {
     await db.url.create({
-      data: { slug, target, enabled: true, domain: domain.host },
+      data: {
+        slug,
+        target,
+        enabled: true,
+        domain: { connect: { id: domain.id } },
+      },
     });
   } catch (error) {
     console.error(error);
@@ -50,7 +55,7 @@ export async function updateUrl(formData: FormData) {
   }
   try {
     await db.url.update({
-      where: { id: id, domain: domain.host },
+      where: { id: id, domainId: domain.id },
       data: { slug, target },
     });
   } catch (error) {
@@ -74,7 +79,7 @@ export async function deleteUrl(formData: FormData) {
 
   try {
     await db.url.delete({
-      where: { slug, target, domain: domain.host },
+      where: { slug, domainId: domain.id },
     });
   } catch (error) {
     console.error(error);
@@ -95,7 +100,7 @@ export async function toggleUrl(formData: FormData) {
 
   try {
     await db.url.update({
-      where: { slug, domain: domain.host },
+      where: { slug, domainId: domain.id },
       data: { enabled },
     });
     if (!enabled) {
@@ -122,8 +127,8 @@ export async function topUrls(
     const urlVisits = await db.visit.groupBy({
       by: ['urlId'],
       where: {
-        Url: {
-          domain: domain.host,
+        url: {
+          domainId: domain.id,
           enabled: true,
           visits: {
             some: {
@@ -175,7 +180,7 @@ export async function getUrl(slug: string, enabled: boolean = true) {
 
   try {
     const urlEntry = await db.url.findFirst({
-      where: { slug, domain: domain.host, enabled },
+      where: { slug, domainId: domain.id, enabled },
     });
 
     if (!urlEntry) {

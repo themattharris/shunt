@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       id: urlEntry.id,
       target: urlEntry.target,
-      domain: urlEntry.domain,
+      domainId: urlEntry.domainId,
     });
   } catch (error) {
     console.error('Error resolving slug:', error);
